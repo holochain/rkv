@@ -28,13 +28,16 @@ use crate::readwrite::{
 
 use crate::value::Value;
 
-use crate::store::single::SingleStore;
+use crate::store::single::{
+    Iter,
+    SingleStore,
+};
 
 pub trait EncodableKey {
     fn to_bytes(&self) -> Result<Vec<u8>, DataError>;
 }
 
-pub trait PrimitiveInt: EncodableKey {}
+pub trait PrimitiveInt: Copy + EncodableKey {}
 
 impl PrimitiveInt for u32 {}
 
@@ -108,6 +111,18 @@ where
 
     pub fn clear(&self, writer: &mut Writer) -> Result<(), StoreError> {
         self.inner.clear(writer)
+    }
+
+    pub fn iter_start<'env, T: Readable>(&self, reader: &'env T) -> Result<Iter<'env>, StoreError> {
+        self.inner.iter_start(reader)
+    }
+
+    pub fn iter_end<'env, T: Readable>(&self, reader: &'env T) -> Result<Iter<'env>, StoreError> {
+        self.inner.iter_end(reader)
+    }
+
+    pub fn iter_from<'env, T: Readable>(&self, reader: &'env T, k: K) -> Result<Iter<'env>, StoreError> {
+        self.inner.iter_from(reader, Key::new(&k)?)
     }
 }
 

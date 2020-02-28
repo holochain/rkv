@@ -74,6 +74,22 @@ impl SingleStore {
         })
     }
 
+    pub fn iter_end<'env, T: Readable>(self, reader: &'env T) -> Result<Iter<'env>, StoreError> {
+        let mut cursor = reader.open_ro_cursor(self.db)?;
+
+        // TODO: This has a problem which `iter_start` does not have, namely that
+        // a panic will occur when there are no items in the store. To fix this,
+        // we can either catch and discard the error, or unsafely move the cursor
+        // to the end and then use MDB_PREV as the first operation instead of MDB_LAST
+        //
+        let iter = cursor.iter_end();
+
+        Ok(Iter {
+            iter,
+            cursor,
+        })
+    }
+
     pub fn iter_from<T: Readable, K: AsRef<[u8]>>(self, reader: &T, k: K) -> Result<Iter, StoreError> {
         let mut cursor = reader.open_ro_cursor(self.db)?;
         let iter = cursor.iter_from(k);
