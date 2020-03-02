@@ -78,6 +78,7 @@ where
     }
 }
 
+#[derive(Copy, Clone)]
 pub struct IntegerStore<K>
 where
     K: PrimitiveInt,
