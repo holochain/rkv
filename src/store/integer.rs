@@ -10,9 +10,9 @@
 
 use std::marker::PhantomData;
 
-use bincode::serialize;
+use bincode::{serialize, deserialize};
 
-use serde::Serialize;
+use serde::{de::DeserializeOwned, Serialize};
 
 use lmdb::Database;
 
@@ -33,8 +33,9 @@ use crate::store::single::{
     SingleStore,
 };
 
-pub trait EncodableKey {
+pub trait EncodableKey: Sized {
     fn to_bytes(&self) -> Result<Vec<u8>, DataError>;
+    fn from_bytes(bytes: &[u8]) -> Result<Self, DataError>;
 }
 
 pub trait PrimitiveInt: Copy + EncodableKey {}
@@ -43,11 +44,15 @@ impl PrimitiveInt for u32 {}
 
 impl<T> EncodableKey for T
 where
-    T: Serialize,
+    T: Serialize + DeserializeOwned
 {
     fn to_bytes(&self) -> Result<Vec<u8>, DataError> {
         serialize(self) // TODO: limited key length.
             .map_err(Into::into)
+    }
+
+    fn from_bytes(bytes: &[u8]) -> Result<Self, DataError> {
+        deserialize(bytes).map_err(Into::into)
     }
 }
 

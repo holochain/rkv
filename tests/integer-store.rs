@@ -14,7 +14,7 @@ use rkv::{
     StoreOptions,
     Value,
 };
-use serde_derive::Serialize;
+use serde_derive::{Deserialize, Serialize};
 use std::fs;
 use tempfile::Builder;
 
@@ -53,7 +53,7 @@ fn test_integer_keys() {
 
     let t = k.open_integer("s", StoreOptions::create()).expect("open");
 
-    #[derive(Copy, Clone, Serialize)]
+    #[derive(Copy, Clone, Serialize, Deserialize)]
     struct I32(i32);
     impl PrimitiveInt for I32 {}
     test_integer_keys!(t, I32(std::i32::MIN));
@@ -61,7 +61,7 @@ fn test_integer_keys() {
 
     let u = k.open_integer("s", StoreOptions::create()).expect("open");
 
-    #[derive(Copy, Clone, Serialize)]
+    #[derive(Copy, Clone, Serialize, Deserialize)]
     struct U16(u16);
     impl PrimitiveInt for U16 {}
     test_integer_keys!(u, U16(std::u16::MIN));
@@ -69,7 +69,7 @@ fn test_integer_keys() {
 
     let v = k.open_integer("s", StoreOptions::create()).expect("open");
 
-    #[derive(Copy, Clone, Serialize)]
+    #[derive(Copy, Clone, Serialize, Deserialize)]
     struct U64(u64);
     impl PrimitiveInt for U64 {}
     test_integer_keys!(v, U64(std::u64::MIN));
