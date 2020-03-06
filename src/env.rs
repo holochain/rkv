@@ -263,6 +263,11 @@ impl Rkv {
     pub fn set_map_size(&self, size: usize) -> Result<(), StoreError> {
         self.env.set_map_size(size).map_err(Into::into)
     }
+
+    /// Access the Path for this environment
+    pub fn path(&self) -> &Path {
+        &self.path
+    }
 }
 
 // TODO: change this back to `clippy::cognitive_complexity` when Clippy stable
