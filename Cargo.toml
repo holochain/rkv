@@ -26,7 +26,7 @@ bincode = "1.0"
 bitflags = "1"
 byteorder = "1"
 lazy_static = "1.0"
-lmdb-rkv = { git = "https://github.com/holochain/lmdb-rs.git", branch = "reverse-iterator" }
+lmdb-rkv = { git = "https://github.com/holochain/lmdb-rs.git" }
 ordered-float = "1.0"
 uuid = "0.8"
 serde = "1.0"
