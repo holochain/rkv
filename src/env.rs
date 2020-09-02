@@ -10,32 +10,15 @@
 
 use std::os::raw::c_uint;
 
-use std::path::{
-    Path,
-    PathBuf,
-};
+use std::path::{Path, PathBuf};
 
 use lmdb;
 
-use lmdb::{
-    Database,
-    DatabaseFlags,
-    Environment,
-    EnvironmentBuilder,
-    Error,
-    Info,
-    Stat,
-};
+use lmdb::{Database, DatabaseFlags, Environment, EnvironmentBuilder, Error, Info, Stat};
 
 use crate::error::StoreError;
-use crate::readwrite::{
-    Reader,
-    Writer,
-};
-use crate::store::integer::{
-    IntegerStore,
-    PrimitiveInt,
-};
+use crate::readwrite::{Reader, Writer};
+use crate::store::integer::{IntegerStore, PrimitiveInt};
 
 use crate::store::integermulti::MultiIntegerStore;
 use crate::store::multi::MultiStore;
@@ -50,6 +33,10 @@ pub struct Rkv {
     path: PathBuf,
     env: Environment,
 }
+
+// TODO: is this OK?????????????
+unsafe impl Send for Rkv {}
+unsafe impl Sync for Rkv {}
 
 /// Static methods.
 impl Rkv {
@@ -275,17 +262,10 @@ impl Rkv {
 #[allow(clippy::complexity)]
 #[cfg(test)]
 mod tests {
-    use byteorder::{
-        ByteOrder,
-        LittleEndian,
-    };
+    use byteorder::{ByteOrder, LittleEndian};
     use std::{
-        fs,
-        str,
-        sync::{
-            Arc,
-            RwLock,
-        },
+        fs, str,
+        sync::{Arc, RwLock},
         thread,
     };
     use tempfile::Builder;
@@ -309,7 +289,7 @@ mod tests {
         match Rkv::new(nope.as_path()).err() {
             Some(StoreError::DirectoryDoesNotExistError(p)) => {
                 assert_eq!(pb, p);
-            },
+            }
             _ => panic!("expected error"),
         };
     }
@@ -749,10 +729,10 @@ mod tests {
         match second {
             Err(StoreError::ReadTransactionAlreadyExists(t)) => {
                 println!("Thread was {:?}", t);
-            },
+            }
             _ => {
                 panic!("Expected error.");
-            },
+            }
         }
     }
 
