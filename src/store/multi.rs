@@ -11,10 +11,7 @@
 use crate::{
     error::StoreError,
     read_transform,
-    readwrite::{
-        Readable,
-        Writer,
-    },
+    readwrite::{Readable, Writer},
     value::Value,
 };
 use lmdb::{
@@ -28,7 +25,7 @@ use lmdb::{
 
 #[derive(Copy, Clone)]
 pub struct MultiStore {
-    db: Database,
+    pub db: Database,
 }
 
 pub struct Iter<'env> {

@@ -11,23 +11,14 @@
 use crate::{
     error::StoreError,
     read_transform,
-    readwrite::{
-        Readable,
-        Writer,
-    },
+    readwrite::{Readable, Writer},
     value::Value,
 };
-use lmdb::{
-    Cursor,
-    Database,
-    Iter as LmdbIter,
-    RoCursor,
-    WriteFlags,
-};
+use lmdb::{Cursor, Database, Iter as LmdbIter, RoCursor, WriteFlags};
 
 #[derive(Copy, Clone)]
 pub struct SingleStore {
-    db: Database,
+    pub db: Database,
 }
 
 pub struct Iter<'env> {
